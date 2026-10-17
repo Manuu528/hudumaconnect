@@ -1,0 +1,33 @@
+
+{% extends "requests_app/base.html" %}
+
+{% block title %}Request Details | HudumaConnect{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Service Request Details</h1>
+    <p class="muted">Reference number</p>
+    <p><strong>{{ service_request.reference_number }}</strong></p>
+
+    <p><strong>Category:</strong> {{ service_request.get_category_display }}</p>
+    <p><strong>Location:</strong> {{ service_request.location }}</p>
+    <p><strong>Description:</strong></p>
+    <p>{{ service_request.description|linebreaksbr }}</p>
+    <p>
+        <strong>Status:</strong>
+        <span class="badge {{ service_request.status }}">
+            {{ service_request.get_status_display }}
+        </span>
+    </p>
+    <p><strong>Submitted:</strong> {{ service_request.created_at|date:"d M Y, H:i" }}</p>
+    <p><strong>Last updated:</strong> {{ service_request.updated_at|date:"d M Y, H:i" }}</p>
+
+    {% if service_request.image %}
+        <h2>Attached Photo</h2>
+        <img src="{{ service_request.image.url }}" alt="Attached service request"
+             style="max-width:100%;max-height:400px;border-radius:10px">
+    {% endif %}
+
+    <p><a class="btn btn-secondary" href="{% url 'dashboard' %}">Back to Dashboard</a></p>
+</div>
+{% endblock %}

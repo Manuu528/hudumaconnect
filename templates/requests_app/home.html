@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HudumaConnect | Public Service Requests</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Arial, sans-serif; color: #172033; background: #f4f7fb; }
+        nav { padding: 20px 8%; display: flex; justify-content: space-between; align-items: center; background: white; }
+        nav strong { color: #075985; font-size: 23px; }
+        a { text-decoration: none; }
+        nav a { margin-left: 18px; color: #075985; font-weight: bold; }
+        .hero { padding: 85px 8%; background: linear-gradient(120deg, #083344, #0369a1); color: white; }
+        .hero h1 { font-size: clamp(36px, 5vw, 58px); max-width: 720px; margin: 0 0 20px; }
+        .hero p { font-size: 18px; line-height: 1.7; max-width: 650px; color: #e0f2fe; }
+        .btn { display: inline-block; padding: 13px 20px; margin: 12px 10px 0 0; border-radius: 8px; font-weight: bold; background: #fbbf24; color: #172033; }
+        .btn.secondary { background: white; color: #075985; }
+        .features { padding: 45px 8%; display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 22px; }
+        .card { background: white; border-radius: 14px; padding: 25px; box-shadow: 0 5px 20px #0f172a0d; }
+        .card h3 { color: #075985; }
+        footer { text-align: center; padding: 25px; color: #64748b; }
+    </style>
+</head>
+<body>
+<nav>
+    <strong>HudumaConnect</strong>
+    <div><a href="{% url 'login' %}">Login</a><a href="{% url 'register' %}">Register</a></div>
+</nav>
+<section class="hero">
+    <h1>Your community. Your voice. Better public services.</h1>
+    <p>Report local service issues, track progress, and help build safer, cleaner, better-connected communities through one simple platform.</p>
+    <a class="btn" href="{% url 'register' %}">Get Started</a>
+    <a class="btn secondary" href="{% url 'login' %}">Sign In</a>
+</section>
+<section class="features">
+    <article class="card"><h3>Submit a Request</h3><p>Report water supply problems, damaged roads, broken streetlights, waste collection issues, and more.</p></article>
+    <article class="card"><h3>Track Progress</h3><p>View your submitted requests and check whether they are pending, in progress, or resolved.</p></article>
+    <article class="card"><h3>Accountable Service</h3><p>Give administrators a central place to review reports and update their resolution status.</p></article>
+</section>
+<footer>HudumaConnect · Public Service Request System</footer>
+</body>
+</html>

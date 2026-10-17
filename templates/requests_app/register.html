@@ -1,0 +1,19 @@
+
+{% extends "requests_app/base.html" %}
+
+{% block title %}Citizen Registration | HudumaConnect{% endblock %}
+
+{% block content %}
+<div class="card form-card">
+    <h1>Create your citizen account</h1>
+    <p class="muted">Register to report and track community service issues.</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn" type="submit">Create Account</button>
+    </form>
+
+    <p>Already registered? <a href="{% url 'login' %}">Sign in here</a>.</p>
+</div>
+{% endblock %}

@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}HudumaConnect{% endblock %}</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #172b4d;
+            background: #f4f7fb;
+        }
+        nav {
+            background: white;
+            padding: 17px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 12px #0000000a;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .brand { color: #087f8c; font-size: 23px; font-weight: bold; }
+        nav a { color: #334155; text-decoration: none; margin-left: 15px; }
+        main { max-width: 1100px; margin: 35px auto; padding: 0 20px; }
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 4px 20px #172b4d0a;
+            margin-bottom: 22px;
+        }
+        .form-card { max-width: 600px; margin: 35px auto; }
+        h1, h2 { margin-top: 0; }
+        .muted { color: #64748b; }
+        label { display: block; font-weight: bold; margin: 15px 0 7px; }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d5dce7;
+            border-radius: 8px;
+            font: inherit;
+            background: white;
+        }
+        textarea { min-height: 130px; resize: vertical; }
+        .btn {
+            display: inline-block;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #087f8c;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            font: inherit;
+        }
+        .btn-secondary { background: #e7f4f4; color: #087f8c; }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin: 22px 0;
+        }
+        .stat-number { font-size: 30px; font-weight: bold; color: #087f8c; }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 13px; text-align: left; border-bottom: 1px solid #e8edf4; }
+        th { background: #f8fafc; }
+        .badge { display: inline-block; padding: 6px 9px; border-radius: 20px; background: #e9eff8; font-size: 12px; }
+        .pending { background: #fff0cf; color: #8a5a00; }
+        .in_progress { background: #dceeff; color: #0756a0; }
+        .resolved { background: #d9f7e8; color: #126a42; }
+        .messages { padding: 0; list-style: none; }
+        .messages li { padding: 12px; border-radius: 8px; background: #e3f5ee; margin-bottom: 10px; }
+        .errorlist { color: #b42318; }
+        .inline-form { display: inline; }
+        footer { text-align: center; padding: 25px; color: #64748b; }
+        @media (max-width: 600px) {
+            nav { padding: 16px 5%; }
+            nav a { margin-left: 8px; }
+            main { padding: 0 12px; }
+            .card { padding: 18px; }
+            th, td { padding: 9px; }
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <a class="brand" href="{% url 'home' %}" style="text-decoration:none">HudumaConnect</a>
+    <div>
+        {% if user.is_authenticated %}
+            {% if user.is_staff %}
+                <a href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
+            {% else %}
+                <a href="{% url 'dashboard' %}">My Dashboard</a>
+                <a href="{% url 'submit_request' %}">New Request</a>
+            {% endif %}
+            <form method="post" action="{% url 'logout' %}" class="inline-form">
+                {% csrf_token %}
+                <button class="btn btn-secondary" type="submit">Logout</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Register</a>
+        {% endif %}
+    </div>
+</nav>
+
+<main>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+</main>
+
+<footer>HudumaConnect · Public Service Request System</footer>
+</body>
+</html>

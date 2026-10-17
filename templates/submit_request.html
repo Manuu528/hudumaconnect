@@ -1,0 +1,40 @@
+
+{% extends "requests_app/base.html" %}
+
+{% block title %}Submit a Request | HudumaConnect{% endblock %}
+
+{% block content %}
+<div class="card form-card">
+    <h1>Report a Community Issue</h1>
+    <p class="muted">Give accurate details to help the relevant team respond.</p>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="category">Service Category</label>
+        <select name="category" id="category" required>
+            <option value="">Choose a category</option>
+            {% for value, label in categories %}
+                <option value="{{ value }}">{{ label }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="location">Location</label>
+        <input type="text" name="location" id="location"
+               maxlength="255" placeholder="e.g. Londiani town, near the market"
+               required>
+
+        <label for="description">Description of the issue</label>
+        <textarea name="description" id="description" maxlength="5000"
+                  placeholder="Explain the problem and any useful details..."
+                  required></textarea>
+
+        <label for="image">Attach a photo (optional)</label>
+        <input type="file" name="image" id="image"
+               accept="image/jpeg,image/png,image/webp">
+        <small class="muted">JPEG, PNG or WebP; maximum 5 MB.</small>
+
+        <p><button class="btn" type="submit">Submit Request</button></p>
+    </form>
+</div>
+{% endblock %}

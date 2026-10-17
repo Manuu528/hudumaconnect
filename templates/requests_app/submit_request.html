@@ -1,0 +1,24 @@
+{% extends "requests_app/base.html" %}
+{% block content %}
+<div class="container">
+    <h1>Submit a Service Request</h1>
+    <p>Describe the issue and where it is happening.</p>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="category">Issue category</label>
+        <select id="category" name="category" required>
+            <option value="">Choose a category</option>
+            {% for value, label in categories %}
+            <option value="{{ value }}">{{ label }}</option>
+            {% endfor %}
+        </select>
+        <label for="location">Location</label>
+        <input id="location" name="location" maxlength="255" required placeholder="e.g. street, estate, village">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" maxlength="5000" required rows="5" placeholder="Explain the issue clearly"></textarea>
+        <label for="image">Supporting image (optional; JPEG, PNG or WebP, max 5 MB)</label>
+        <input id="image" type="file" name="image" accept="image/jpeg,image/png,image/webp">
+        <button type="submit">Submit Request</button>
+    </form>
+</div>
+{% endblock %}

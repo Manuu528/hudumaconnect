@@ -1,0 +1,64 @@
+
+{% extends "requests_app/base.html" %}
+
+{% block title %}My Dashboard | HudumaConnect{% endblock %}
+
+{% block content %}
+<h1>My Service Dashboard</h1>
+<p class="muted">Welcome, {{ request.user.username }}. Track your community reports below.</p>
+
+<div class="stats">
+    <div class="card">
+        <p>Total Requests</p>
+        <div class="stat-number">{{ total }}</div>
+    </div>
+    <div class="card">
+        <p>Pending</p>
+        <div class="stat-number">{{ pending }}</div>
+    </div>
+    <div class="card">
+        <p>In Progress</p>
+        <div class="stat-number">{{ in_progress }}</div>
+    </div>
+    <div class="card">
+        <p>Resolved</p>
+        <div class="stat-number">{{ resolved }}</div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>My Requests</h2>
+    <p><a class="btn" href="{% url 'submit_request' %}">+ Submit a Request</a></p>
+
+    {% if requests_list %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Reference</th>
+                    <th>Category</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in requests_list %}
+                <tr>
+                    <td>{{ item.reference_number|truncatechars:13 }}</td>
+                    <td>{{ item.get_category_display }}</td>
+                    <td>{{ item.location }}</td>
+                    <td><span class="badge {{ item.status }}">{{ item.get_status_display }}</span></td>
+                    <td>{{ item.created_at|date:"d M Y" }}</td>
+                    <td><a href="{% url 'request_detail' item.pk %}">View</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p class="muted">You haven't submitted any requests yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
