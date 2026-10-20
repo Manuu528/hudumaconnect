@@ -505,3 +505,11 @@ footer {
         font-size: 26px;
     }
 }
+.site-copyright {
+    text-align: center;
+    padding: 22px 15px;
+    margin-top: 40px;
+    color: #64748b;
+    font-size: 13px;
+    border-top: 1px solid #e2e8f0;
+}
