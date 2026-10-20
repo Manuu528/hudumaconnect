@@ -59,3 +59,20 @@ class ServiceRequest(models.Model):
     def __str__(self):
         return f"{self.reference_number} - {self.get_category_display()}"
 
+class CitizenProfile(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="citizen_profile",
+    )
+    phone_number = models.CharField(
+        max_length=20,
+        blank=True,
+    )
+    email_verified = models.BooleanField(default=False)
+    phone_verified = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Profile for {self.user.username}"

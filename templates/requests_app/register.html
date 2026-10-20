@@ -1,19 +1,68 @@
 
 {% extends "requests_app/base.html" %}
 
-{% block title %}Citizen Registration | HudumaConnect{% endblock %}
+{% block title %}Create Your Account | HudumaConnect{% endblock %}
 
 {% block content %}
-<div class="card form-card">
-    <h1>Create your citizen account</h1>
-    <p class="muted">Register to report and track community service issues.</p>
+<section class="register-wrap">
+    <header class="register-heading">
+        <p class="dashboard-eyebrow" style="color:#8ce4d7">
+            JOIN YOUR COMMUNITY
+        </p>
+        <h1>Create your citizen account</h1>
+        <p>
+            Register to report local service issues and follow their
+            progress from submission to resolution.
+        </p>
+    </header>
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn" type="submit">Create Account</button>
-    </form>
+    <div class="register-content">
+        <div class="register-note">
+            <strong>Almost there.</strong>
+            Complete the fields below to create your account.
+            Use a valid Kenyan mobile number.
+        </div>
 
-    <p>Already registered? <a href="{% url 'login' %}">Sign in here</a>.</p>
-</div>
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="error-message" role="alert">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.help_text %}
+                        <div class="muted">
+                            {{ field.help_text|safe }}
+                        </div>
+                    {% endif %}
+
+                    {% for error in field.errors %}
+                        <p class="error-message" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <button class="btn" type="submit">
+                Create My Account →
+            </button>
+        </form>
+
+        <p class="auth-footnote">
+            Already have an account?
+            <a href="{% url 'login' %}">Sign in</a>
+        </p>
+    </div>
+</section>
 {% endblock %}

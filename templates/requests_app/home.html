@@ -1,43 +1,182 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Report and track community public service requests with HudumaConnect.">
     <title>HudumaConnect | Public Service Requests</title>
     <style>
         * { box-sizing: border-box; }
-        body { margin: 0; font-family: Arial, sans-serif; color: #172033; background: #f4f7fb; }
-        nav { padding: 20px 8%; display: flex; justify-content: space-between; align-items: center; background: white; }
-        nav strong { color: #075985; font-size: 23px; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #172033;
+            background: #f7f9fc;
+        }
         a { text-decoration: none; }
-        nav a { margin-left: 18px; color: #075985; font-weight: bold; }
-        .hero { padding: 85px 8%; background: linear-gradient(120deg, #083344, #0369a1); color: white; }
-        .hero h1 { font-size: clamp(36px, 5vw, 58px); max-width: 720px; margin: 0 0 20px; }
-        .hero p { font-size: 18px; line-height: 1.7; max-width: 650px; color: #e0f2fe; }
-        .btn { display: inline-block; padding: 13px 20px; margin: 12px 10px 0 0; border-radius: 8px; font-weight: bold; background: #fbbf24; color: #172033; }
-        .btn.secondary { background: white; color: #075985; }
-        .features { padding: 45px 8%; display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 22px; }
-        .card { background: white; border-radius: 14px; padding: 25px; box-shadow: 0 5px 20px #0f172a0d; }
-        .card h3 { color: #075985; }
-        footer { text-align: center; padding: 25px; color: #64748b; }
+        nav {
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            border-bottom: 1px solid #e8edf4;
+        }
+        .brand { color: #075985; font-size: 23px; font-weight: 800; }
+        .nav-link { color: #334155; font-weight: 600; margin-right: 24px; }
+        .nav-button {
+            display: inline-block;
+            padding: 11px 19px;
+            border-radius: 8px;
+            background: #075985;
+            color: white;
+            font-weight: 700;
+        }
+        .hero {
+            padding: 90px 8%;
+            background: linear-gradient(120deg, #083344, #0369a1);
+            color: white;
+        }
+        .hero-content { max-width: 850px; }
+        .eyebrow {
+            display: inline-block;
+            color: #fde68a;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        .hero h1 {
+            font-size: clamp(36px, 5vw, 60px);
+            line-height: 1.12;
+            max-width: 780px;
+            margin: 20px 0;
+        }
+        .hero p {
+            font-size: 18px;
+            line-height: 1.8;
+            max-width: 680px;
+            color: #e0f2fe;
+        }
+        .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+        .btn {
+            display: inline-block;
+            padding: 14px 21px;
+            border-radius: 8px;
+            font-weight: 700;
+        }
+        .btn-primary { background: #fbbf24; color: #172033; }
+        .btn-secondary { border: 1px solid #bfdbfe; color: white; }
+        .section-heading { text-align: center; max-width: 650px; margin: 0 auto 35px; }
+        .section-heading h2 { font-size: 30px; margin-bottom: 10px; }
+        .section-heading p { color: #64748b; line-height: 1.7; }
+        .features { padding: 65px 8%; }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 22px;
+        }
+        .card {
+            background: white;
+            border: 1px solid #e8edf4;
+            border-radius: 14px;
+            padding: 27px;
+            box-shadow: 0 5px 20px #0f172a08;
+        }
+        .number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #e0f2fe;
+            color: #075985;
+            font-weight: 800;
+        }
+        .card h3 { color: #075985; margin-top: 20px; }
+        .card p { color: #64748b; line-height: 1.7; }
+        .closing {
+            margin: 0 8% 65px;
+            padding: 35px;
+            border-radius: 16px;
+            background: #eaf5fb;
+            text-align: center;
+        }
+        .closing h2 { margin-top: 0; }
+        .closing p { color: #475569; line-height: 1.7; }
+        footer { text-align: center; padding: 25px; color: #64748b; background: white; }
+        a:focus-visible { outline: 3px solid #fbbf24; outline-offset: 3px; }
+        @media (max-width: 600px) {
+            nav { padding: 17px 5%; }
+            .brand { font-size: 19px; }
+            .nav-link { display: none; }
+            .hero { padding: 65px 6%; }
+            .hero p { font-size: 16px; }
+            .features { padding: 45px 6%; }
+            .closing { margin: 0 6% 45px; padding: 25px; }
+        }
     </style>
 </head>
 <body>
 <nav>
-    <strong>HudumaConnect</strong>
-    <div><a href="{% url 'login' %}">Login</a><a href="{% url 'register' %}">Register</a></div>
+    <a class="brand" href="{% url 'home' %}">HudumaConnect</a>
+    <div>
+        <a class="nav-link" href="#how-it-works">How it works</a>
+        <a class="nav-button" href="{% url 'login' %}">Sign In</a>
+    </div>
 </nav>
-<section class="hero">
-    <h1>Your community. Your voice. Better public services.</h1>
-    <p>Report local service issues, track progress, and help build safer, cleaner, better-connected communities through one simple platform.</p>
-    <a class="btn" href="{% url 'register' %}">Get Started</a>
-    <a class="btn secondary" href="{% url 'login' %}">Sign In</a>
-</section>
-<section class="features">
-    <article class="card"><h3>Submit a Request</h3><p>Report water supply problems, damaged roads, broken streetlights, waste collection issues, and more.</p></article>
-    <article class="card"><h3>Track Progress</h3><p>View your submitted requests and check whether they are pending, in progress, or resolved.</p></article>
-    <article class="card"><h3>Accountable Service</h3><p>Give administrators a central place to review reports and update their resolution status.</p></article>
-</section>
+
+<main>
+    <section class="hero">
+        <div class="hero-content">
+            <span class="eyebrow">Your community, connected</span>
+            <h1>Your Community. Your Voice. Better Public Services.</h1>
+            <p>
+                Report local service issues, follow their progress, and help
+                build cleaner, safer communities. HudumaConnect brings public
+                service requests together in one simple platform.
+            </p>
+            <div class="actions">
+                <a class="btn btn-primary" href="{% url 'register' %}">Create Your Account</a>
+                <a class="btn btn-secondary" href="#how-it-works">See How It Works</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="how-it-works">
+        <div class="section-heading">
+            <h2>Public services, made easier</h2>
+            <p>Submit an issue, follow its status, and stay informed as it moves toward resolution.</p>
+        </div>
+        <div class="feature-grid">
+            <article class="card">
+                <span class="number">01</span>
+                <h3>Report an Issue</h3>
+                <p>Submit concerns about water supply, damaged roads, streetlights, waste collection, drainage, and other local services.</p>
+            </article>
+            <article class="card">
+                <span class="number">02</span>
+                <h3>Track Progress</h3>
+                <p>Sign in to view your requests and check whether each one is pending, in progress, or resolved.</p>
+            </article>
+            <article class="card">
+                <span class="number">03</span>
+                <h3>Follow Resolution</h3>
+                <p>Request administrators can review reports and update their status, helping citizens follow progress.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="closing">
+        <h2>Make your community heard.</h2>
+        <p>Create an account to start reporting and tracking public service issues.</p>
+        <a class="nav-button" href="{% url 'register' %}">Get Started</a>
+    </section>
+</main>
+
 <footer>HudumaConnect · Public Service Request System</footer>
 </body>
 </html>

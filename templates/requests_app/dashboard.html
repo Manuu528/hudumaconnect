@@ -1,64 +1,118 @@
 
 {% extends "requests_app/base.html" %}
 
-{% block title %}My Dashboard | HudumaConnect{% endblock %}
+{% block title %}Citizen Dashboard | HudumaConnect{% endblock %}
 
 {% block content %}
-<h1>My Service Dashboard</h1>
-<p class="muted">Welcome, {{ request.user.username }}. Track your community reports below.</p>
+<section class="dashboard-heading">
+    <div>
+        <p class="dashboard-eyebrow">CITIZEN PORTAL</p>
+        <h1>Your service dashboard</h1>
+        <p class="muted">
+            Welcome back, {{ request.user.username }}.
+            Here's the progress of your community reports.
+        </p>
+    </div>
+</section>
 
-<div class="stats">
-    <div class="card">
-        <p>Total Requests</p>
+<section class="dashboard-action">
+    <div>
+        <h2>Have a community issue to report?</h2>
+        <p class="muted">
+            Submit a service request and keep track of its progress here.
+        </p>
+    </div>
+    <a class="btn" href="{% url 'submit_request' %}">
+        + Submit a Request
+    </a>
+</section>
+
+<section class="stats" aria-label="Request statistics">
+    <div class="card stat-card">
+        <p class="stat-label">Total requests</p>
         <div class="stat-number">{{ total }}</div>
+        <div class="stat-indicator"></div>
     </div>
-    <div class="card">
-        <p>Pending</p>
-        <div class="stat-number">{{ pending }}</div>
-    </div>
-    <div class="card">
-        <p>In Progress</p>
-        <div class="stat-number">{{ in_progress }}</div>
-    </div>
-    <div class="card">
-        <p>Resolved</p>
-        <div class="stat-number">{{ resolved }}</div>
-    </div>
-</div>
 
-<div class="card">
-    <h2>My Requests</h2>
-    <p><a class="btn" href="{% url 'submit_request' %}">+ Submit a Request</a></p>
+    <div class="card stat-card stat-pending">
+        <p class="stat-label">Pending</p>
+        <div class="stat-number">{{ pending }}</div>
+        <div class="stat-indicator"></div>
+    </div>
+
+    <div class="card stat-card stat-progress">
+        <p class="stat-label">In progress</p>
+        <div class="stat-number">{{ in_progress }}</div>
+        <div class="stat-indicator"></div>
+    </div>
+
+    <div class="card stat-card stat-resolved">
+        <p class="stat-label">Resolved</p>
+        <div class="stat-number">{{ resolved }}</div>
+        <div class="stat-indicator"></div>
+    </div>
+</section>
+
+<section class="card requests-panel">
+    <header class="requests-panel-heading">
+        <div>
+            <h2>My service requests</h2>
+            <p class="muted">Review your submitted reports and their latest status.</p>
+        </div>
+        <span class="muted">{{ total }} total</span>
+    </header>
 
     {% if requests_list %}
-    <div class="table-wrap">
-        <table>
-            <thead>
-                <tr>
-                    <th>Reference</th>
-                    <th>Category</th>
-                    <th>Location</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                    <th>Details</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in requests_list %}
-                <tr>
-                    <td>{{ item.reference_number|truncatechars:13 }}</td>
-                    <td>{{ item.get_category_display }}</td>
-                    <td>{{ item.location }}</td>
-                    <td><span class="badge {{ item.status }}">{{ item.get_status_display }}</span></td>
-                    <td>{{ item.created_at|date:"d M Y" }}</td>
-                    <td><a href="{% url 'request_detail' item.pk %}">View</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Reference</th>
+                        <th>Category</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Date submitted</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in requests_list %}
+                        <tr>
+                            <td>
+                                <strong>
+                                    {{ item.reference_number|truncatechars:13 }}
+                                </strong>
+                            </td>
+                            <td>{{ item.get_category_display }}</td>
+                            <td>{{ item.location }}</td>
+                            <td>
+                                <span class="badge {{ item.status }}">
+                                    {{ item.get_status_display }}
+                                </span>
+                            </td>
+                            <td>{{ item.created_at|date:"d M Y" }}</td>
+                            <td>
+                                <a href="{% url 'request_detail' item.pk %}">
+                                    View details →
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
-        <p class="muted">You haven't submitted any requests yet.</p>
+        <div class="empty-state">
+            <div class="empty-icon">＋</div>
+            <h3>No requests yet</h3>
+            <p class="muted">
+                Your submitted service requests will appear here.
+                Start by reporting an issue in your community.
+            </p>
+            <a class="btn" href="{% url 'submit_request' %}">
+                Submit your first request
+            </a>
+        </div>
     {% endif %}
-</div>
+</section>
 {% endblock %}

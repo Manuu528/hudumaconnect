@@ -1,4 +1,4 @@
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -85,7 +85,44 @@
             .card { padding: 18px; }
             th, td { padding: 9px; }
         }
+
+
+        .auth-form-panel form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.auth-form-panel label {
+    display: block;
+    margin: 14px 0 4px;
+}
+
+.auth-form-panel input {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    padding: 13px 14px;
+    margin: 0 0 8px;
+    font-size: 15px;
+}
+
+.auth-form-panel .btn {
+    min-height: 48px;
+    margin-top: 16px;
+}
+
+.auth-mark {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    font-size: 26px;
+}
     </style>
+
+<link rel="stylesheet" href="{% static 'css/huduma.css' %}">
+
+
 </head>
 <body>
 <nav>

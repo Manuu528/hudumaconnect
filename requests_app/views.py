@@ -1,10 +1,18 @@
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.auth.forms import UserCreationForm
+from .forms import CitizenRegistrationForm
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
+
+from django.conf import settings
+from django.core import signing
+from django.core.mail import send_mail
+from django.urls import reverse
+from django.contrib.auth import get_user_model
+from django.utils import timezone
+from datetime import timedelta
 
 from .models import ServiceRequest
 
@@ -13,18 +21,77 @@ def home(request):
     return render(request, "requests_app/home.html")
 
 
+
+
 def register(request):
     if request.user.is_authenticated:
         return redirect("dashboard")
 
-    form = UserCreationForm(request.POST or None)
+    form = CitizenRegistrationForm(request.POST or None)
+
     if request.method == "POST" and form.is_valid():
         user = form.save()
         login(request, user)
-        messages.success(request, "Your account was created successfully.")
+        messages.success(
+            request,
+            "Your account was created successfully.",
+        )
         return redirect("dashboard")
 
-    return render(request, "requests_app/register.html", {"form": form})
+    return render(
+        request,
+        "requests_app/register.html",
+        {"form": form},
+    )
+
+
+def verify_email(request, token):
+    try:
+        data = signing.loads(
+            token,
+            salt="hudumaconnect-email-verification",
+            max_age=60 * 60 * 24,
+        )
+    except signing.SignatureExpired:
+        return render(
+            request,
+            "requests_app/verify_email_invalid.html",
+            {"message": "This verification link has expired."},
+        )
+    except signing.BadSignature:
+        return render(
+            request,
+            "requests_app/verify_email_invalid.html",
+            {"message": "This verification link is invalid."},
+        )
+
+    User = get_user_model()
+
+    try:
+        user = User.objects.get(pk=data["user_id"])
+    except (User.DoesNotExist, KeyError, TypeError):
+        return render(
+            request,
+            "requests_app/verify_email_invalid.html",
+            {"message": "This verification link is invalid."},
+        )
+
+    if not user.is_active:
+        user.is_active = True
+        user.save(update_fields=["is_active"])
+
+    profile = user.citizen_profile
+    profile.email_verified = True
+    profile.save(update_fields=["email_verified", "updated_at"])
+
+    messages.success(
+        request,
+        "Your email has been verified. You can now sign in.",
+    )
+    return redirect("login")
+
+
+
 
 
 @login_required
