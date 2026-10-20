@@ -25,10 +25,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-only-local-key-change-before-deployment')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False' if os.environ.get('RENDER') else 'True').lower() == 'true'
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost,.onrender.com').split(',')
-
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.environ.get(
+        "ALLOWED_HOSTS",
+        "127.0.0.1,localhost,.onrender.com,.vercel.app"
+    ).split(",")
+    if host.strip()
+]
 
 # Application definition
 
@@ -142,8 +148,25 @@ MEDIA_ROOT = BASE_DIR / "media"
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
 CSRF_TRUSTED_ORIGINS = [
-    origin for origin in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
-    if origin
+    origin.strip()
+    for origin in os.environ.get(
+        "CSRF_TRUSTED_ORIGINS",
+        "https://*.vercel.app,https://*.onrender.com"
+    ).split(",")
+    if origin.strip()
 ]
+# Email configuration for local development
+
+# Email configuration for HudumaConnect
+import os
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+EMAIL_VERIFICATION_TIMEOUT = 60 * 60 * 24
